@@ -1,0 +1,11 @@
+@WebApiExample_HostAddress = http://localhost:5148/integrationendpoints
+
+GET {{WebApiExample_HostAddress}}/
+Accept: application/json
+
+###
+
+GET {{WebApiExample_HostAddress}}/1
+Accept: application/json
+
+###
