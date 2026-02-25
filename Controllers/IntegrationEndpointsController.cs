@@ -1,3 +1,4 @@
+using IntegrationMonitoringApi.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IntegrationMonitoringApi.Controllers;
@@ -6,43 +7,30 @@ namespace IntegrationMonitoringApi.Controllers;
 [Route("[controller]")]
 public class IntegrationEndpointsController : ControllerBase
 {
-    private readonly List<IntegrationEndpoint> _endpoints =
-    [
-        new IntegrationEndpoint()
-        {
-            IntegrationEndpointId = 1,
-            Name = "Payment Gateway"
-        },
 
-        new IntegrationEndpoint()
-        {
-            IntegrationEndpointId = 2,
-            Name = "Notification Gateway"
-        },
-
-        new IntegrationEndpoint()
-        {
-            IntegrationEndpointId = 3,
-            Name = "SNMP Endpoint"
-        }
-
-    ];
+    private readonly IntegrationEndpointService _integrationEndpointService;
+    public IntegrationEndpointsController(IntegrationEndpointService integrationEndpointService)
+    {
+        _integrationEndpointService = integrationEndpointService;
+    }
+    
     
     // GET: api/integrationendpoints
     [HttpGet]
     public ActionResult<IEnumerable<IntegrationEndpoint>> GetIntegrationEndpoints()
     {
-        return _endpoints;
+        var _endpoints = _integrationEndpointService.GetAllEndpoints();
+        return Ok(_endpoints);
     }
     
     // GET /integrationendpoints/{id}
     [HttpGet("{id:int}")]
     public ActionResult<IntegrationEndpoint> GetIntegrationEndpointById(int id)
     {
-        var endpoint = _endpoints.FirstOrDefault(e => e.IntegrationEndpointId == id);
-        if (endpoint != null)
+        var _endpoint = _integrationEndpointService.GetEndpointById(id);
+        if (_endpoint != null)
         {
-            return Ok(endpoint);
+            return Ok(_endpoint);
         }
         else
         {
