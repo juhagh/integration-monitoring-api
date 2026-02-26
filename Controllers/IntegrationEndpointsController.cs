@@ -1,3 +1,4 @@
+using IntegrationMonitoringApi.Domain;
 using IntegrationMonitoringApi.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,7 +35,31 @@ public class IntegrationEndpointsController : ControllerBase
         }
         else
         {
-            return NotFound($"End point {id} not found!");    
+            return NotFound($"Endpoint {id} not found!");    
         }
+    }
+    
+    // POST /integrationpoints
+    [HttpPost]
+    public ActionResult CreateIntegrationEndpoint([FromBody] IntegrationEndpoint endpoint)
+    {
+        var created = _integrationEndpointService.AddEndpoint(endpoint);
+        return CreatedAtAction(nameof(GetIntegrationEndpointById),
+            new { id = created.IntegrationEndpointId },
+            // new { id = created?.Entity.IntegrationEndpointId },
+            created);
+    }
+    
+    // DELETE /integrationendpoints/{id}
+    [HttpDelete("{id:int}")]
+    public ActionResult DeleteIntegrationEndpoint(int id)
+    {
+        var result = _integrationEndpointService.DeleteEndpointById(id);
+        if (!result)
+        {
+            return NotFound();
+        }
+
+        return NoContent();
     }
 }

@@ -1,4 +1,4 @@
-namespace IntegrationMonitoringApi.Controllers;
+namespace IntegrationMonitoringApi.Domain;
 
 public class IntegrationEndpoint
 {

@@ -1,11 +1,30 @@
 @WebApiExample_HostAddress = http://localhost:5148/integrationendpoints
 
+### Get all endpoints
 GET {{WebApiExample_HostAddress}}/
 Accept: application/json
 
-###
-
+### Get endpoint with Id 1
 GET {{WebApiExample_HostAddress}}/1
 Accept: application/json
 
-###
+### Get endpoint with Id 4 (once it is is added)
+GET {{WebApiExample_HostAddress}}/4
+Accept: application/json
+
+### Get nonexisting endpoint and get 404
+GET {{WebApiExample_HostAddress}}/999
+Accept: application/json
+
+### Send POST request with json body, 201 when successful
+POST {{WebApiExample_HostAddress}}/
+Content-Type: application/json
+
+{
+  "Name": "LogServer",
+  "Description": "Audit log server"
+}
+
+### Delete endpoint by id. No content when success, 404 when endpoint not found
+DELETE {{WebApiExample_HostAddress}}/4
+Accept: application/json
