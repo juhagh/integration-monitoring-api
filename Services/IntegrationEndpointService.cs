@@ -1,5 +1,6 @@
 using IntegrationMonitoringApi.Data;
 using IntegrationMonitoringApi.Domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace IntegrationMonitoringApi.Services;
 
@@ -12,34 +13,35 @@ public class IntegrationEndpointService
         _context = applicationDbContext;
     }
 
-    public List<IntegrationEndpoint> GetAllEndpoints()
+    public async Task<List<IntegrationEndpoint>> GetAllEndpoints()
     {
-        return _context.IntegrationEndpoints.ToList();
+        return await _context.IntegrationEndpoints
+            .AsNoTracking()
+            .ToListAsync();
     }
 
-    public IntegrationEndpoint? GetEndpointById(int id)
+    public async Task<IntegrationEndpoint?> GetEndpointById(int id)
     {
-        var endpoint = _context.IntegrationEndpoints.FirstOrDefault(e => e.IntegrationEndpointId == id);
-        return endpoint;
+        return await _context.IntegrationEndpoints.FindAsync(id);
     }
 
-    public IntegrationEndpoint AddEndpoint(IntegrationEndpoint endpoint)
+    public async Task<IntegrationEndpoint> AddEndpoint(IntegrationEndpoint endpoint)
     {
-        var entity = _context.IntegrationEndpoints.Add(endpoint);
-        _context.SaveChanges();
+        var entity = await _context.IntegrationEndpoints.AddAsync(endpoint);
+        await _context.SaveChangesAsync();
         return entity.Entity;
     }
 
-    public bool DeleteEndpointById(int id)
+    public async Task<bool> DeleteEndpointById(int id)
     {
-        var endpoint = _context.IntegrationEndpoints.FirstOrDefault(e => e.IntegrationEndpointId == id);
+        var endpoint = await _context.IntegrationEndpoints.FindAsync(id);
         if (endpoint == null)
         {
             return false;
         }
-
+        
         _context.IntegrationEndpoints.Remove(endpoint);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         return true;
     }
 }

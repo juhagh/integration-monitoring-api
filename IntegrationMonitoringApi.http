@@ -26,5 +26,5 @@ Content-Type: application/json
 }
 
 ### Delete endpoint by id. No content when success, 404 when endpoint not found
-DELETE {{WebApiExample_HostAddress}}/4
+DELETE {{WebApiExample_HostAddress}}/5
 Accept: application/json

@@ -18,17 +18,17 @@ public class IntegrationEndpointsController : ControllerBase
     
     // GET: api/integrationendpoints
     [HttpGet]
-    public ActionResult<IEnumerable<IntegrationEndpoint>> GetIntegrationEndpoints()
+    public async Task<ActionResult<IEnumerable<IntegrationEndpoint>>> GetIntegrationEndpoints()
     {
-        var _endpoints = _integrationEndpointService.GetAllEndpoints();
+        var _endpoints = await _integrationEndpointService.GetAllEndpoints();
         return Ok(_endpoints);
     }
     
     // GET /integrationendpoints/{id}
     [HttpGet("{id:int}")]
-    public ActionResult<IntegrationEndpoint> GetIntegrationEndpointById(int id)
+    public async Task<ActionResult<IntegrationEndpoint>> GetIntegrationEndpointById(int id)
     {
-        var _endpoint = _integrationEndpointService.GetEndpointById(id);
+        var _endpoint = await _integrationEndpointService.GetEndpointById(id);
         if (_endpoint != null)
         {
             return Ok(_endpoint);
@@ -41,9 +41,9 @@ public class IntegrationEndpointsController : ControllerBase
     
     // POST /integrationpoints
     [HttpPost]
-    public ActionResult CreateIntegrationEndpoint([FromBody] IntegrationEndpoint endpoint)
+    public async Task<ActionResult> CreateIntegrationEndpoint([FromBody] IntegrationEndpoint endpoint)
     {
-        var created = _integrationEndpointService.AddEndpoint(endpoint);
+        var created = await _integrationEndpointService.AddEndpoint(endpoint);
         return CreatedAtAction(nameof(GetIntegrationEndpointById),
             new { id = created.IntegrationEndpointId },
             // new { id = created?.Entity.IntegrationEndpointId },
@@ -52,9 +52,9 @@ public class IntegrationEndpointsController : ControllerBase
     
     // DELETE /integrationendpoints/{id}
     [HttpDelete("{id:int}")]
-    public ActionResult DeleteIntegrationEndpoint(int id)
+    public async Task<ActionResult> DeleteIntegrationEndpoint(int id)
     {
-        var result = _integrationEndpointService.DeleteEndpointById(id);
+        var result = await _integrationEndpointService.DeleteEndpointById(id);
         if (!result)
         {
             return NotFound();
