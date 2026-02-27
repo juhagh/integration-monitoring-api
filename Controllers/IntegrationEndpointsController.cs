@@ -90,4 +90,25 @@ public class IntegrationEndpointsController : ControllerBase
 
         return NoContent();
     }
+    
+    // PUT /integrationendpoints/{id}
+    [HttpPut("{id:int}")]
+    public async Task<ActionResult> UpdateIntegrationEndpoint(
+        int id, 
+        [FromBody] UpdateIntegrationEndpointDto dto)
+    {
+        var updated = new IntegrationEndpoint
+        {
+            Name = dto.Name,
+            Description = dto.Description
+        };
+
+        var result = await _integrationEndpointService.UpdateEndpointAsync(id, updated);
+        if (!result)
+        {
+            return NotFound();
+        }
+
+        return NoContent();
+    }
 }

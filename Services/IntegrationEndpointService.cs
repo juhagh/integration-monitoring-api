@@ -44,4 +44,19 @@ public class IntegrationEndpointService
         await _context.SaveChangesAsync();
         return true;
     }
+
+    public async Task<bool> UpdateEndpointAsync(int id, IntegrationEndpoint updated)
+    {
+        var endpoint = await _context.IntegrationEndpoints.FindAsync(id);
+        if (endpoint == null)
+        {
+            return false;
+        }
+
+        endpoint.Name = updated.Name;
+        endpoint.Description = updated.Description;
+        
+        await _context.SaveChangesAsync();
+        return true;
+    }
 }

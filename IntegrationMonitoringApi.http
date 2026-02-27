@@ -40,3 +40,29 @@ Accept: application/json
 ### Delete non-existing endpoint by id. 404 expected
 DELETE {{WebApiExample_HostAddress}}/999
 Accept: application/json
+
+### Send PUT request with json body, 204 when successful
+PUT {{WebApiExample_HostAddress}}/4
+Content-Type: application/json
+
+{
+  "Name": "Updated LogServer",
+  "Description": "Updated Audit log server"
+}
+
+### Send PUT request with invalid json body, 400 expected
+PUT {{WebApiExample_HostAddress}}/4
+Content-Type: application/json
+
+{
+  "Description": "Updated Audit log server"
+}
+
+### Send PUT request for non-existing endpoint, 404 expected
+PUT {{WebApiExample_HostAddress}}/999
+Content-Type: application/json
+
+{
+  "Name": "Updated LogServer",
+  "Description": "Updated Audit log server"
+}
