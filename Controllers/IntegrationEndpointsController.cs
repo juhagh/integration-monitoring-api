@@ -1,4 +1,5 @@
 using IntegrationMonitoringApi.Domain;
+using IntegrationMonitoringApi.DTOs;
 using IntegrationMonitoringApi.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,20 +19,33 @@ public class IntegrationEndpointsController : ControllerBase
     
     // GET: api/integrationendpoints
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<IntegrationEndpoint>>> GetIntegrationEndpoints()
+    public async Task<ActionResult<IEnumerable<IntegrationEndpointDto>>> GetIntegrationEndpoints()
     {
-        var _endpoints = await _integrationEndpointService.GetAllEndpoints();
-        return Ok(_endpoints);
+        var endpoints = await _integrationEndpointService.GetAllEndpoints();
+        var result = endpoints.Select(e =>
+            new IntegrationEndpointDto
+            {
+                IntegrationEndpointId = e.IntegrationEndpointId,
+                Name = e.Name,
+                Description = e.Description
+            }).ToList();
+        return Ok(result);
     }
     
     // GET /integrationendpoints/{id}
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<IntegrationEndpoint>> GetIntegrationEndpointById(int id)
+    public async Task<ActionResult<IntegrationEndpointDto>> GetIntegrationEndpointById(int id)
     {
-        var _endpoint = await _integrationEndpointService.GetEndpointById(id);
-        if (_endpoint != null)
+        var endpoint = await _integrationEndpointService.GetEndpointById(id);
+        if (endpoint != null)
         {
-            return Ok(_endpoint);
+            var result = new IntegrationEndpointDto
+            {
+                IntegrationEndpointId = endpoint.IntegrationEndpointId,
+                Name = endpoint.Name,
+                Description = endpoint.Description
+            };
+            return Ok(result);
         }
         else
         {
@@ -41,13 +55,27 @@ public class IntegrationEndpointsController : ControllerBase
     
     // POST /integrationpoints
     [HttpPost]
-    public async Task<ActionResult> CreateIntegrationEndpoint([FromBody] IntegrationEndpoint endpoint)
+    public async Task<ActionResult<IntegrationEndpointDto>> CreateIntegrationEndpoint([FromBody] CreateIntegrationEndpointDto dto)
     {
+        IntegrationEndpoint endpoint = new IntegrationEndpoint()
+        {
+            Name = dto.Name,
+            Description = dto.Description
+        };
+        
         var created = await _integrationEndpointService.AddEndpoint(endpoint);
-        return CreatedAtAction(nameof(GetIntegrationEndpointById),
-            new { id = created.IntegrationEndpointId },
-            // new { id = created?.Entity.IntegrationEndpointId },
-            created);
+
+        IntegrationEndpointDto result = new IntegrationEndpointDto()
+        {
+            IntegrationEndpointId = created.IntegrationEndpointId,
+            Name = created.Name,
+            Description = created.Description
+        }; 
+        
+        return CreatedAtAction(
+            nameof(GetIntegrationEndpointById),
+            new { id = result.IntegrationEndpointId },
+            result);
     }
     
     // DELETE /integrationendpoints/{id}

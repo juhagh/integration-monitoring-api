@@ -25,6 +25,18 @@ Content-Type: application/json
   "Description": "Audit log server"
 }
 
-### Delete endpoint by id. No content when success, 404 when endpoint not found
-DELETE {{WebApiExample_HostAddress}}/5
+### Send Invalid POST request with json body missing Name, 400 expected
+POST {{WebApiExample_HostAddress}}/
+Content-Type: application/json
+
+{
+  "Description": "Audit log server"
+}
+
+### Delete endpoint by id. 204 No content when success, 404 when endpoint not found
+DELETE {{WebApiExample_HostAddress}}/3
+Accept: application/json
+
+### Delete non-existing endpoint by id. 404 expected
+DELETE {{WebApiExample_HostAddress}}/999
 Accept: application/json
